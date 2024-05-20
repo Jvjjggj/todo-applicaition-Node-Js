@@ -1,9 +1,7 @@
 const express = require("express");
 const path = require("path");
-const jwt = require("jsonwebtoken");
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
-const bcrypt = require("bcrypt");
 
 const app = express();
 app.use(express.json());
@@ -43,8 +41,8 @@ const checkRequestQueries = async (request, response, next) => {
   const { search_q, category, priority, status, date } = request.query;
   const { todoId } = request.params;
   if (category !== undefined) {
-    const categoryLst = ["Work", "Home", "Learning"];
-    const categoryInLst = categoryInLst.includes(category);
+    const categoryLst = ["WORK", "HOME", "LEARNING"];
+    const categoryInLst = categoryLst.includes(category);
     if (categoryInLst) {
       request.category = category;
     } else {
@@ -115,7 +113,7 @@ const checkRequestBody = async (request, response, next) => {
   const todoId = request.params;
 
   if (category !== undefined) {
-    const categoryLst = ["Work", "HOME", "Learning"];
+    const categoryLst = ["WORK", "HOME", "LEARNING"];
     const categoryInLst = categoryLst.includes(category);
     if (categoryInLst) {
       request.category = category;
