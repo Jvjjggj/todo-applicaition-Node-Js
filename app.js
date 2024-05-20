@@ -2,6 +2,9 @@ const express = require("express");
 const path = require("path");
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
+var toDate = require("date-fns/toDate");
+var isValid = require("date-fns/isValid");
+var format = require("date-fns/format");
 
 const app = express();
 app.use(express.json());
@@ -26,20 +29,11 @@ const initializeDBAndServer = async () => {
 };
 initializeDBAndServer();
 
-const format = (dbResponse) => {
-  return {
-    id: dbResponse.id,
-    todo: dbResponse.todo,
-    priority: dbResponse.priority,
-    status: dbResponse.status,
-    category: dbResponse.category,
-    dueDate: dbResponse.due_date,
-  };
-};
-
 const checkRequestQueries = async (request, response, next) => {
   const { search_q, category, priority, status, date } = request.query;
+
   const { todoId } = request.params;
+
   if (category !== undefined) {
     const categoryLst = ["WORK", "HOME", "LEARNING"];
     const categoryInLst = categoryLst.includes(category);
@@ -80,15 +74,9 @@ const checkRequestQueries = async (request, response, next) => {
       const myDate = new Date(date);
       const formatDate = format(new Date(date), "yyyy-MM-dd");
       console.log(formatDate);
-      const result = toDate(
-        new Date(
-          `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate}`
-        )
-      );
-      console.log(result, "r");
-      console.log(new Date(), "new");
-      const isValidDate = await isValid(result);
-      console.log(isValidDate, "V");
+
+      const isValidDate = await isValid(new Date(date));
+
       if (isValidDate) {
         request.date = formatDate;
       } else {
@@ -96,10 +84,9 @@ const checkRequestQueries = async (request, response, next) => {
         response.send("Invalid Due Date");
         return;
       }
-    } catch (e) {
+    } catch (error) {
       response.status(400);
       response.send("Invalid Due Date");
-      return;
     }
   }
 
@@ -223,7 +210,6 @@ app.post("/todos/", checkRequestBody, async (request, response) => {
                    values
                            (${id},'${todo}','${category}','${priority}','${status}','${dueDate}')`;
   const dbResponse = await db.run(query);
-  console.log(dbResponse);
   response.send("Todo Successfully Added");
 });
 

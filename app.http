@@ -1,15 +1,15 @@
 GET http://localhost:3000/todos/?status=TO%20DO
 
 ### 1
-GET http://localhost:3000/todos/2
+GET http://localhost:3000/todos/1
 
 ### 2
 
-GET http://localhost:3000/agenda/?date=2021-1-21
+GET http://localhost:3000/agenda/?date=2021-01-120
 
 ###  3
 
-GET http://localhost:3000/agenda/?date=:2021-1-21
+GET http://localhost:3000/agenda/?date=:2021-02-22
 
 ### 3-1
 
@@ -63,3 +63,23 @@ PUT http://localhost:3000/todos/1/
 Content-Type: application/json
 
 { "category": "LEARNING" }
+
+### 1-7
+GET http://localhost:3000/todos/?status=dsfdsggjgkd
+
+###
+
+PUT http://localhost:3000/todos/1/
+Content-Type: application/json
+
+{ "dueDate": "2021-01-12" }
+
+###
+GET http://localhost:3000/todos/
+
+###
+
+PUT http://localhost:3000/todos/1
+Content-Type: application/json
+
+{ "status": "DONE" }
